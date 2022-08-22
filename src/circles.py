@@ -72,8 +72,6 @@ def get_grayscales(image, circles, mask=True):
 
 
 def get_circles(img, min_dist=20, param1=60, param2=10, min_radius=10, max_radius=13, sort=True, plot=True, mask=True):
-    # gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    # img_blur = cv2.medianBlur(gray, 5)
 
     # https://docs.opencv.org/4.x/dd/d1a/group__imgproc__feature.html#ga47849c3be0d0406ad3ca45db65a25d2d
     circles = cv2.HoughCircles(img,

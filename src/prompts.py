@@ -1,7 +1,9 @@
 import click
 import cv2
+import numpy as np
+from matplotlib import pyplot as plt
 
-from src.images.circles import plot_detected_circles, get_circles
+from src.circles import plot_detected_circles, get_circles
 
 # Create point matrix get coordinates of mouse click on image
 point_matrix = [[-1, -1], [-1, -1]]
@@ -72,3 +74,20 @@ def check_circles_position(fi, param1, param2, min_distance, crop_values=None):
         cv2.destroyAllWindows()
 
         return circles
+
+
+def dialog_fix_bright_jump(grayscales_evolution, mean_grayscale_evolution):
+    grayscale_diffs = [t - s for s, t in zip(mean_grayscale_evolution, mean_grayscale_evolution[1:])]
+    step_index = np.argmax(np.abs(grayscale_diffs)) + 1
+    click.echo(f"Jump in brightness detected in image {step_index}")
+    plt.plot(mean_grayscale_evolution)
+    plt.axvline(step_index, color='r')
+    plt.ion()
+    plt.show(block=False)
+    plt.pause(1)
+    if click.confirm("Do you want to apply the correction?"):
+        corr = mean_grayscale_evolution[step_index] - mean_grayscale_evolution[step_index + 1]
+        grayscales_evolution[step_index + 1:, :] += corr
+    plt.close('all')
+
+    return grayscales_evolution

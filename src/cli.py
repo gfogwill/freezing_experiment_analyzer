@@ -1,14 +1,14 @@
 from src import __version__
 
 from src import paths
-from src.images.circles import get_grayscales_evolution
-from src.images.misc import input_crop_values, check_circles_position
+from src.circles import get_grayscales_evolution
+from src.prompts import input_crop_values, check_circles_position, dialog_fix_bright_jump
 
 import click
 import pathlib
 import numpy as np
-import matplotlib.pyplot as plt
-from time import sleep
+
+from src.reports import generate_reports
 
 DEFAULT_MIN_DIST = 10
 DEFAULT_PARAM2 = 7
@@ -88,38 +88,6 @@ def analyze(experiment_name, crop, crop_values, hough_param1, hough_param2, houg
     click.echo(freezing_idxs)
 
     generate_reports(experiment_name, freezing_idxs, out_path)
-
-
-def generate_reports(experiment_name, freezing_idxs, out_path):
-
-    pathlib.Path(out_path).mkdir(parents=True, exist_ok=True)
-    data = np.genfromtxt(paths.raw_data_path / experiment_name / 'log_data.csv', delimiter=',', names=True)
-
-    t = []
-    ff = []
-
-    with open(out_path / 'report.csv', 'w') as fo:
-        for i, line in enumerate(data):
-            t.append(line['TC_Temperature_°C'])
-            ff.append((np.array(freezing_idxs) <= i).sum()/25)
-            fo.write(f'{i},{t[-1]},{ff[-1]}\n')
-
-
-def dialog_fix_bright_jump(grayscales_evolution, mean_grayscale_evolution):
-    grayscale_diffs = [t - s for s, t in zip(mean_grayscale_evolution, mean_grayscale_evolution[1:])]
-    step_index = np.argmax(np.abs(grayscale_diffs)) + 1
-    click.echo(f"Jump in brightness detected in image {step_index}")
-    plt.plot(mean_grayscale_evolution)
-    plt.axvline(step_index, color='r')
-    plt.ion()
-    plt.show(block=False)
-    plt.pause(1)
-    if click.confirm("Do you want to apply the correction?"):
-        corr = mean_grayscale_evolution[step_index] - mean_grayscale_evolution[step_index + 1]
-        grayscales_evolution[step_index + 1:, :] += corr
-    plt.close('all')
-
-    return grayscales_evolution
 
 
 if __name__ == '__main__':
