@@ -58,13 +58,12 @@ Project Organization
     │
     ├── src                <- Source code for use in this project.
     │   ├── __init__.py    <- Makes src a Python module
-    │   │
-    │   ├── data           <- Scripts to download or generate data
-    │   │   └── make_dataset.py
-    │   │
-    │   ├── images       <- Scripts to analyze the images
-    │   │   └── circles.py
-    │ 
+    │   ├── circles.py     <- Scripts to detect circles in images
+    │   ├── cli.py         <- Scripts for the Command Line Interface (CLI)
+    │   ├── localdata.py   <- Scripts to load raw data from experiments
+    │   ├── paths.py       <- Definition of the paths of the package
+    │   ├── prompts.py     <- Prompts used by cli.py
+    │   ├── reports.py     <- Scripts to generate reports and plots after the data analysis
     │
     └── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
 
