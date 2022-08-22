@@ -3,7 +3,7 @@ import pathlib
 import click
 import numpy as np
 
-from src import paths
+from src.localdata import load_log_data
 
 
 def generate_reports(experiment_name, freezing_idxs, out_path):
@@ -11,7 +11,7 @@ def generate_reports(experiment_name, freezing_idxs, out_path):
     click.echo(f"Generating reports in path: {out_path}")
 
     pathlib.Path(out_path).mkdir(parents=True, exist_ok=True)
-    data = np.genfromtxt(paths.raw_data_path / experiment_name / 'log_data.csv', delimiter=',', names=True)
+    data = load_log_data(experiment_name)
 
     t = []
     ff = []
@@ -23,3 +23,4 @@ def generate_reports(experiment_name, freezing_idxs, out_path):
             fo.write(f'{i},{t[-1]},{ff[-1]}\n')
 
     click.echo("Reports done!")
+

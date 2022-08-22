@@ -2,10 +2,10 @@ from src import __version__
 
 from src import paths
 from src.circles import get_grayscales_evolution
+from src.localdata import load_images_file_list
 from src.prompts import input_crop_values, check_circles_position, dialog_fix_bright_jump
 
 import click
-import pathlib
 import numpy as np
 
 from src.reports import generate_reports
@@ -61,9 +61,7 @@ def analyze(experiment_name, crop, crop_values, hough_param1, hough_param2, houg
     if out_path is None:
         out_path = paths.reports_path / experiment_name
 
-    # Load all the images
-    files_path = pathlib.Path(paths.raw_data_path / experiment_name)
-    files_list = sorted(pathlib.Path(files_path).glob('*.jpg'), key=lambda path: int(path.stem))
+    files_list = load_images_file_list(experiment_name)
 
     # Set crop values
     if crop and crop_values is None:

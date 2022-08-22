@@ -64,9 +64,7 @@ Project Organization
     │   │
     │   ├── images       <- Scripts to analyze the images
     │   │   └── circles.py
-    │   │
-    │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-    │       └── visualize.py
+    │ 
     │
     └── setup.py           <- makes project pip installable (pip install -e .) so src can be imported
 
