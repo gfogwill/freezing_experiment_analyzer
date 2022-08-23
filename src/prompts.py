@@ -57,16 +57,17 @@ def input_crop_values(fi):
         cv2.waitKey(1)
 
 
-def check_circles_position(fi, param1, param2, min_distance, crop_values=None):
+def check_circles_position(fi, blurriness, param1, param2, min_distance, crop_values=None):
     img = cv2.imread(fi)
 
     if crop_values is not None:
         img = img[crop_values[1]:crop_values[3], crop_values[0]:crop_values[2]]
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    img = cv2.medianBlur(gray, 5)
+    img = cv2.medianBlur(gray, blurriness)
 
     click.echo(f"Parameters used for circle Hough Transform:\n"
+               f"\tBlurriness: {blurriness}\n"
                f"\tParameter 1: {param1}\n"
                f"\tParameter 2: {param2}\n"
                f"\tMin. distance: {min_distance}")

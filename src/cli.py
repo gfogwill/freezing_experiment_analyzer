@@ -10,9 +10,10 @@ import numpy as np
 
 from src.reports import generate_reports
 
-DEFAULT_MIN_DIST = 10
-DEFAULT_PARAM2 = 7
+DEFAULT_BLURRINESS = 5
 DEFAULT_PARAM1 = 200
+DEFAULT_PARAM2 = 7
+DEFAULT_MIN_DIST = 10
 
 LOGO = rf"""
 ❄ Freezing Experiment Analizer ❄   
@@ -44,6 +45,7 @@ def info():
                                                                              "passed as argument will ask to enter them"
                                                                              "manually")
 @click.option('--crop-values', type=(int, int, int, int), default=None, help="Crop values")
+@click.option('--blurriness', type=int, default=DEFAULT_BLURRINESS, help="Blurriness to be applied before Hough transform")
 @click.option('--hough_param1', type=int, default=DEFAULT_PARAM1, help='First method-specific parameter for Hough '
                                                                        'Gradient Method.')
 @click.option('--hough_param2', type=int, default=DEFAULT_PARAM2, help='Second method-specific parameter for Hough '
@@ -54,7 +56,7 @@ def info():
                                                                      "fix the brightness of all images after that "
                                                                      "point.")
 @click.option('--out-path', type=click.Path(), default=None, help="Output path to save reports.")
-def analyze(experiment_name, crop, crop_values, hough_param1, hough_param2, hough_min_distance, fix_bright_jump, out_path):
+def analyze(experiment_name, crop, crop_values, blurriness, hough_param1, hough_param2, hough_min_distance, fix_bright_jump, out_path):
     """Analyze all the images to detect the frozen fraction"""
 
     # Set default report path if None
@@ -68,7 +70,7 @@ def analyze(experiment_name, crop, crop_values, hough_param1, hough_param2, houg
         crop_values = input_crop_values(str(files_list[0]))  # Use the first image to ask for input
 
     # Check if detected circles are correct
-    circles_positions = check_circles_position(str(files_list[0]), hough_param1, hough_param2, hough_min_distance, crop_values)
+    circles_positions = check_circles_position(str(files_list[0]), blurriness, hough_param1, hough_param2, hough_min_distance, crop_values)
 
     # Get the evolution of grayscale value for each circle
     grayscales_evolution, mean_grayscale_evolution = get_grayscales_evolution(files_list, crop_values, circles_positions)
