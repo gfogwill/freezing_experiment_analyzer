@@ -66,6 +66,11 @@ def check_circles_position(fi, param1, param2, min_distance, crop_values=None):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     img = cv2.medianBlur(gray, 5)
 
+    click.echo(f"Parameters used for circle Hough Transform:\n"
+               f"\tParameter 1: {param1}\n"
+               f"\tParameter 2: {param2}\n"
+               f"\tMin. distance: {min_distance}")
+
     circles = get_circles(img, param1=param1, param2=param2, min_dist=min_distance)
 
     plot_detected_circles(img, circles)
