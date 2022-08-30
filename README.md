@@ -1,11 +1,8 @@
-Freezing Experiment Analyzer
-============================
+# Freezing Experiment Analyzer
 
 Python package to analyze collected data from freezing experiments to estimate INP concentration as function of the activation temperature in the immersion freezing mode.
 
-
-Getting started
----------------
+## Getting started
 
 Clone the repository
 
@@ -24,15 +21,15 @@ $ source venv/bin/activate
 $ python -m pip install -r requirements.txt
 ```
 
-Every time you start a new session you need to activate the virtual environment.
+**Note**: Every time you start a new session you need to activate the virtual environment.
 
 ```console
 $ source venv/bin/activate
 ```
 
 
-Project Organization
-------------
+## Project Organization
+
 
     ├── LICENSE
     ├── README.md          <- The top-level README for developers using this project.
