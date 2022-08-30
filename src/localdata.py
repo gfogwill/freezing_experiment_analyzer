@@ -26,3 +26,7 @@ def load_images_file_list(experiment_name):
 
 def load_log_data(experiment_name):
     return np.genfromtxt(paths.raw_data_path / experiment_name / 'log_data.csv', delimiter=',', names=True)
+
+
+def load_readme(experiment_name):
+    return np.genfromtxt(paths.raw_data_path / experiment_name / 'README.md')

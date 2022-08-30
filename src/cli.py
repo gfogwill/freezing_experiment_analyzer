@@ -63,17 +63,17 @@ def analyze(experiment_name, crop, crop_values, blurriness, hough_param1, hough_
     if out_path is None:
         out_path = paths.reports_path / experiment_name
 
-    files_list = load_images_file_list(experiment_name)
+    pics_list = load_images_file_list(experiment_name)
 
     # Set crop values
     if crop and crop_values is None:
-        crop_values = input_crop_values(str(files_list[0]))  # Use the first image to ask for input
+        crop_values = input_crop_values(str(pics_list[0]))  # Use the first image to ask for input
 
     # Check if detected circles are correct
-    circles_positions = check_circles_position(str(files_list[0]), blurriness, hough_param1, hough_param2, hough_min_distance, crop_values)
+    circles_positions = check_circles_position(str(pics_list[0]), blurriness, hough_param1, hough_param2, hough_min_distance, crop_values)
 
     # Get the evolution of grayscale value for each circle
-    grayscales_evolution, mean_grayscale_evolution = get_grayscales_evolution(files_list, crop_values, circles_positions)
+    grayscales_evolution, mean_grayscale_evolution = get_grayscales_evolution(pics_list, crop_values, circles_positions)
 
     if fix_bright_jump:
         grayscales_evolution = dialog_fix_bright_jump(grayscales_evolution, mean_grayscale_evolution)
@@ -87,7 +87,7 @@ def analyze(experiment_name, crop, crop_values, blurriness, hough_param1, hough_
 
     click.echo(freezing_idxs)
 
-    generate_reports(experiment_name, freezing_idxs, out_path)
+    generate_reports(experiment_name, pics_list, freezing_idxs, out_path)
 
 
 if __name__ == '__main__':
