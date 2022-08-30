@@ -1,9 +1,14 @@
 import click
 import cv2
 import numpy as np
+
 from matplotlib import pyplot as plt
 
 from src.circles import plot_detected_circles, get_circles
+
+PARAM1_MIN, PARAM1_MAX = 100, 200
+PARAM2_MIN, PARAM2_MAX = 5, 15
+BLURRINESS_MIN, BLURRINESS_MAX = 0, 9
 
 # Create point matrix get coordinates of mouse click on image
 point_matrix = [[-1, -1], [-1, -1]]
@@ -57,29 +62,51 @@ def input_crop_values(fi):
         cv2.waitKey(1)
 
 
-def check_circles_position(fi, blurriness, param1, param2, min_distance, crop_values=None):
+def check_circles_position(fi, n, blurriness, param1, param2, min_distance, crop_values=None):
+    circles_position = []
+
     img = cv2.imread(fi)
 
     if crop_values is not None:
         img = img[crop_values[1]:crop_values[3], crop_values[0]:crop_values[2]]
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    img = cv2.medianBlur(gray, blurriness)
 
-    click.echo(f"Parameters used for circle Hough Transform:\n"
-               f"\tBlurriness: {blurriness}\n"
-               f"\tParameter 1: {param1}\n"
-               f"\tParameter 2: {param2}\n"
-               f"\tMin. distance: {min_distance}")
+    if param1 is None:
+        while circles_position.__len__() is not n:
+            param1 = np.random.randint(PARAM1_MIN, PARAM1_MAX)
+            param2 = np.random.randint(PARAM2_MIN, PARAM2_MAX)
+            blurriness = np.random.randint(BLURRINESS_MIN, BLURRINESS_MAX)
 
-    circles = get_circles(img, param1=param1, param2=param2, min_dist=min_distance)
+            click.echo(f"Blurriness: {blurriness}")
+            try:
+                pic = cv2.medianBlur(gray, blurriness)
+            except cv2.error:
+                continue
 
-    plot_detected_circles(img, circles)
+            circles_position = get_circles(pic, param1=param1, param2=param2, min_dist=min_distance)
+            if circles_position.__len__() is not n: continue
 
-    if click.confirm("Are the circles in the correct position?", abort=True):
-        cv2.destroyAllWindows()
+            plot_detected_circles(pic, circles_position)
 
-        return circles
+            if click.confirm("Are the circles in the correct position?"):
+                cv2.destroyAllWindows()
+
+                return circles_position
+            else:
+                circles_position = []
+                continue
+
+    else:
+        pic = cv2.medianBlur(gray, blurriness)
+        circles_position = get_circles(pic, param1=param1, param2=param2, min_dist=min_distance)
+
+        plot_detected_circles(pic, circles_position)
+
+        if click.confirm("Are the circles in the correct position?", abort=True):
+            cv2.destroyAllWindows()
+
+            return circles_position
 
 
 def dialog_fix_bright_jump(grayscales_evolution, mean_grayscale_evolution):
