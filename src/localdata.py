@@ -12,7 +12,7 @@ def load_images_file_list(experiment_name):
     pics_path = experiment_path / 'pics'
 
     if not experiment_path.exists():
-        logging.error(f"Experiment {experiment_name} does not exist!")
+        logging.error(f"Experiment {experiment_name} does not exist!\n Check dir: {experiment_path}")
         exit()
 
     pics_list = sorted(pics_path.glob('*.jpg'), key=lambda path: int(path.stem))
