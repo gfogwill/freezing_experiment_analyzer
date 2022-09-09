@@ -84,7 +84,7 @@ def check_circles_position(fi, n, blurriness, param1, param2, min_distance, crop
             except cv2.error:
                 continue
 
-            circles_position = get_circles(pic, n, min_dist=min_distance, param1=param1, param2=param2)
+            circles_position = get_circles(pic, min_dist=min_distance, param1=param1, param2=param2)
             if circles_position.__len__() is not n: continue
 
             plot_detected_circles(pic, circles_position)
@@ -99,7 +99,7 @@ def check_circles_position(fi, n, blurriness, param1, param2, min_distance, crop
 
     else:
         pic = cv2.medianBlur(gray, blurriness)
-        circles_position = get_circles(pic, n, min_dist=min_distance, param1=param1, param2=param2)
+        circles_position = get_circles(pic, min_dist=min_distance, param1=param1, param2=param2)
 
         plot_detected_circles(pic, circles_position)
 
