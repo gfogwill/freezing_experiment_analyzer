@@ -2,7 +2,18 @@
 
 Python package to analyze collected data from freezing experiments to estimate INP concentration as function of the activation temperature in the immersion freezing mode.
 
-## Getting started
+This project can be used from the command line with `brr` command or can be imported into other python modules. 
+
+
+
+## Prerequisites
+
+Requirements for the software and other tools to build, test and push
+
+- [Python 3](https://www.python.org)
+- [Git](https://git-scm.com/)
+
+## Installing
 
 Clone the repository
 
@@ -16,16 +27,44 @@ recommend creating a virtual environment with a tool such as
 [virtualenv](https://virtualenv.pypa.io/en/stable/):
 
 ```console
-$ python -m venv venv
-$ source venv/bin/activate
+$ python -m venv my_venv
+$ source my_venv/bin/activate
 $ python -m pip install -r requirements.txt
 ```
 
 **Note**: Every time you start a new session you need to activate the virtual environment.
 
 ```console
-$ source venv/bin/activate
+$ source my_venv/bin/activate
 ```
+
+This can also be done with Conda. Create a new Conda virtual environment named `my_venv`
+
+The command below will create a new folder called `my_venv`.
+
+```console
+$ conda create --name my_venv
+```
+
+Activating the environment named `my_venv` in Conda
+
+```console
+$ conda activate environment_name
+```
+
+## Testing the installation
+
+```console
+$ brr info
+```
+
+If everything is OK you should see the program logo.
+
+## Getting started
+
+
+
+
 
 
 ## Project Organization
