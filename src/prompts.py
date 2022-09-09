@@ -62,10 +62,12 @@ def input_crop_values(fi):
         cv2.waitKey(1)
 
 
-def check_circles_position(fi, n, blurriness, param1, param2, min_distance, crop_values=None):
+def check_circles_position(fi, n_cols, n_rows, blurriness, param1, param2, min_distance, crop_values=None):
     circles_position = []
 
     img = cv2.imread(fi)
+
+    n = n_rows * n_cols
 
     if crop_values is not None:
         img = img[crop_values[1]:crop_values[3], crop_values[0]:crop_values[2]]
@@ -84,7 +86,7 @@ def check_circles_position(fi, n, blurriness, param1, param2, min_distance, crop
             except cv2.error:
                 continue
 
-            circles_position = get_circles(pic, min_dist=min_distance, param1=param1, param2=param2)
+            circles_position = get_circles(pic, n_cols, min_dist=min_distance, param1=param1, param2=param2)
             if circles_position.__len__() is not n: continue
 
             plot_detected_circles(pic, circles_position)
@@ -99,7 +101,7 @@ def check_circles_position(fi, n, blurriness, param1, param2, min_distance, crop
 
     else:
         pic = cv2.medianBlur(gray, blurriness)
-        circles_position = get_circles(pic, min_dist=min_distance, param1=param1, param2=param2)
+        circles_position = get_circles(pic, n_cols, min_dist=min_distance, param1=param1, param2=param2)
 
         plot_detected_circles(pic, circles_position)
 

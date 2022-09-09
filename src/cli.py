@@ -45,7 +45,8 @@ def info():
                                                                              "passed as argument will ask to enter them"
                                                                              "manually")
 @click.option('--crop-values', type=(int, int, int, int), default=None, help="Crop values")
-@click.option('--droplet-count', type=int, required=True, help="Number of droplets in the experiment")
+@click.option('--n-cols', type=int, required=True, help="Number of columns of droplets in the experiment")
+@click.option('--n-rows', type=int, required=True, help="Number of rows of droplets in the experiment")
 @click.option('--blurriness', type=int, default=None, help="Blurriness to be applied before Hough transform")
 @click.option('--hough-param1', type=int, default=None, help='First method-specific parameter for Hough '
                                                                        'Gradient Method.')
@@ -57,7 +58,7 @@ def info():
                                                                      "fix the brightness of all images after that "
                                                                      "point.")
 @click.option('--out-path', type=click.Path(), default=None, help="Output path to save reports.")
-def analyze(experiment_name, crop, crop_values, droplet_count, blurriness, hough_param1, hough_param2, hough_min_distance, fix_bright_jump, out_path):
+def analyze(experiment_name, crop, crop_values, n_cols, n_rows, blurriness, hough_param1, hough_param2, hough_min_distance, fix_bright_jump, out_path):
     """Analyze all the images to detect the frozen fraction"""
 
     # Set default report path if None
@@ -71,7 +72,7 @@ def analyze(experiment_name, crop, crop_values, droplet_count, blurriness, hough
         crop_values = input_crop_values(str(pics_list[0]))  # Use the first image to ask for input
 
     # Check if detected circles are correct
-    circles_positions = check_circles_position(str(pics_list[0]), droplet_count, blurriness, hough_param1, hough_param2, hough_min_distance, crop_values)
+    circles_positions = check_circles_position(str(pics_list[0]), n_cols, n_rows, blurriness, hough_param1, hough_param2, hough_min_distance, crop_values)
 
     # Get the evolution of grayscale value for each circle
     grayscales_evolution, mean_grayscale_evolution = get_grayscales_evolution(pics_list, crop_values, circles_positions)
@@ -92,4 +93,4 @@ def analyze(experiment_name, crop, crop_values, droplet_count, blurriness, hough
 
 
 if __name__ == '__main__':
-    analyze(['--experiment-name', 'experiment_3', '--droplet-count', 49, '--crop'])
+    analyze(['--experiment-name', 'experiment_3', '--n-cols', 7, '--n-rows', 7, '--crop'])
