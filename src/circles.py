@@ -5,16 +5,14 @@ import pathlib
 import os
 
 
-def sort_circles(circles):
+def sort_circles(circles, n):
     # https://stackoverflow.com/questions/61741434/opencv-sorting-array-of-circles
     circles = np.round(circles).astype("int")
     circles = sorted(circles, key=lambda v: [v[1], v[0]])
 
-    NUM_COLS = 5
-
     sorted_rows = []
-    for k in range(0, len(circles), NUM_COLS):
-        row = circles[k:k + NUM_COLS]
+    for k in range(0, len(circles), n):
+        row = circles[k:k + n]
         sorted_rows.extend(sorted(row, key=lambda v: v[0]))
 
     return sorted_rows
@@ -71,7 +69,8 @@ def get_grayscales(image, circles, mask=True):
     return grayscales
 
 
-def get_circles(img, min_dist=20, param1=60, param2=10, min_radius=10, max_radius=13, sort=True, plot=True, mask=True):
+def get_circles(img, n, min_dist=20, param1=60, param2=10, min_radius=10, max_radius=13, sort=True, plot=True,
+                mask=True):
 
     click.echo(f"Parameters used for circle Hough Transform:\n"
                f"\tParameter 1: {param1}\n"
@@ -90,7 +89,7 @@ def get_circles(img, min_dist=20, param1=60, param2=10, min_radius=10, max_radiu
                                )[0]
 
     if sort:
-        circles = sort_circles(circles)
+        circles = sort_circles(circles, n)
 
     if plot:
         plot_detected_circles(img, circles)
