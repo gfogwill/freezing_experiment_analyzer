@@ -20,7 +20,8 @@ def generate_reports(experiment_name, pics_list, circles_positions, freezing_idx
 
     with open(out_path / 'frozen_fraction_report.csv', 'w') as fo:
         for i, line in enumerate(data):
-            t.append(line['TC_Temperature_°C'])
+            # t.append(line['TC_Temperature_°C'])
+            t.append(line[2])
             ff.append((np.array(freezing_idxs) <= i).sum()/freezing_idxs.__len__())
             fo.write(f'{i},{t[-1]},{ff[-1]}\n')
 
@@ -42,7 +43,7 @@ def generate_video(pic_list, circles_positions, freezing_idxs, out_path, crop_va
         img_array.append(img)
 
         for n, i in enumerate(circles):
-            if int(filename.stem) < freezing_idxs[n]:
+            if int(filename.stem[-3:]) < freezing_idxs[n]:
                 cv2.circle(img, (i[0], i[1]), i[2], (0, 0, 255), 1)
             else:
                 cv2.circle(img, (i[0], i[1]), i[2], (0, 255, 0), 1)

@@ -6,8 +6,9 @@ from matplotlib import pyplot as plt
 
 from src.circles import plot_detected_circles, get_circles
 
-PARAM1_MIN, PARAM1_MAX = 100, 200
-PARAM2_MIN, PARAM2_MAX = 5, 15
+PARAM1_MIN, PARAM1_MAX = 70, 250
+PARAM2_MIN, PARAM2_MAX = 4, 15
+DEFAULT_MIN_DIST = 30
 BLURRINESS_MIN, BLURRINESS_MAX = 0, 9
 
 # Create point matrix get coordinates of mouse click on image
@@ -86,7 +87,7 @@ def check_circles_position(fi, n_cols, n_rows, blurriness, param1, param2, min_d
             except cv2.error:
                 continue
 
-            circles_position = get_circles(pic, n_cols, min_dist=min_distance, param1=param1, param2=param2)
+            circles_position = get_circles(pic, n_cols, min_dist=DEFAULT_MIN_DIST, param1=param1, param2=param2)
             if circles_position.__len__() is not n: continue
 
             plot_detected_circles(pic, circles_position)
@@ -115,14 +116,18 @@ def dialog_fix_bright_jump(grayscales_evolution, mean_grayscale_evolution):
     grayscale_diffs = [t - s for s, t in zip(mean_grayscale_evolution, mean_grayscale_evolution[1:])]
     step_index = np.argmax(np.abs(grayscale_diffs)) + 1
     click.echo(f"Jump in brightness detected in image {step_index}")
+
     plt.plot(mean_grayscale_evolution)
     plt.axvline(step_index, color='r')
     plt.ion()
     plt.show(block=False)
     plt.pause(1)
+
     if click.confirm("Do you want to apply the correction?"):
         corr = mean_grayscale_evolution[step_index] - mean_grayscale_evolution[step_index + 1]
         grayscales_evolution[step_index + 1:, :] += corr
+
     plt.close('all')
 
     return grayscales_evolution
+

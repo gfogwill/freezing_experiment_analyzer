@@ -10,11 +10,6 @@ import numpy as np
 
 from src.reports import generate_reports
 
-# DEFAULT_BLURRINESS = 5
-# DEFAULT_PARAM1 = 200
-# DEFAULT_PARAM2 = 7
-DEFAULT_MIN_DIST = 10
-
 LOGO = rf"""
 ❄ Freezing Experiment Analizer ❄   
                                  v_{__version__}
@@ -52,7 +47,7 @@ def info():
                                                                        'Gradient Method.')
 @click.option('--hough-param2', type=int, default=None, help='Second method-specific parameter for Hough '
                                                                        'Gradient Method.')
-@click.option('--hough-min-distance', type=int, default=DEFAULT_MIN_DIST, help='Minimum distance between the centers of'
+@click.option('--hough-min-distance', type=int, default=None, help='Minimum distance between the centers of'
                                                                                ' the detected circles.')
 @click.option('--fix-bright-jump', is_flag=True, default=False, help="Find the point where the bright changes and "
                                                                      "fix the brightness of all images after that "
@@ -93,4 +88,4 @@ def analyze(experiment_name, crop, crop_values, n_cols, n_rows, blurriness, houg
 
 
 if __name__ == '__main__':
-    analyze(['--experiment-name', 'experiment_3', '--n-cols', 7, '--n-rows', 7, '--crop'])
+    analyze(['--experiment-name', 'BigG1990', '--n-cols', 12, '--n-rows', 8, '--crop'])

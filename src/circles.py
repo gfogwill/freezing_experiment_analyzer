@@ -35,7 +35,6 @@ def plot_detected_circles(img, circles):
 
     cv2.imshow('Image', img)
     cv2.waitKey(100)
-    # cv2.destroyAllWindows()
 
 
 def get_grayscales(image, circles, mask=True):
@@ -69,8 +68,7 @@ def get_grayscales(image, circles, mask=True):
     return grayscales
 
 
-def get_circles(img, n_cols, min_dist=20, param1=60, param2=10, min_radius=10, max_radius=13, sort=True, plot=True,
-                mask=True):
+def get_circles(img, n_cols, min_dist=20, param1=60, param2=10, min_radius=10, max_radius=13, sort=True, plot=True):
 
     click.echo(f"Parameters used for circle Hough Transform:\n"
                f"\tParameter 1: {param1}\n"
