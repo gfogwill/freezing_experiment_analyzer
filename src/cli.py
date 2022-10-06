@@ -88,4 +88,4 @@ def analyze(experiment_name, crop, crop_values, n_cols, n_rows, blurriness, houg
 
 
 if __name__ == '__main__':
-    analyze(['--experiment-name', 'BigG1990', '--n-cols', 12, '--n-rows', 8, '--crop'])
+    analyze(['--experiment-name', '202209291455', '--n-cols', 12, '--n-rows', 8, '--crop'])

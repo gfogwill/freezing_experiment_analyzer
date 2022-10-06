@@ -15,7 +15,7 @@ def load_images_file_list(experiment_name):
         logging.error(f"Experiment {experiment_name} does not exist!\n Check dir: {experiment_path}")
         exit()
 
-    pics_list = sorted(pics_path.glob('*.jpg'), key=lambda path: int(path.stem))
+    pics_list = sorted(pics_path.glob('*.png'), key=lambda path: int(path.stem))
 
     if pics_list.__len__() == 0:
         logging.error("No images found!")
