@@ -80,7 +80,7 @@ def analyze(experiment_name, crop, crop_values, n_cols, n_rows, blurriness, houg
 
     for i in range(grayscales_evolution.shape[-1]):
         grayscales_diffs = [t - s for s, t in zip(grayscales_evolution[:, i], grayscales_evolution[1:, i])]
-        freezing_idxs.append(np.argmax(grayscales_diffs) + 1)
+        freezing_idxs.append(np.argmax(np.abs(grayscales_diffs)) + 1)
 
     click.echo(freezing_idxs)
 
@@ -88,4 +88,4 @@ def analyze(experiment_name, crop, crop_values, n_cols, n_rows, blurriness, houg
 
 
 if __name__ == '__main__':
-    analyze(['--experiment-name', '202209291455', '--n-cols', 12, '--n-rows', 8, '--crop'])
+    analyze(['--experiment-name', '221006_LVS01_0806_1800_588min_T95_001', '--n-cols', 12, '--n-rows', 8])
