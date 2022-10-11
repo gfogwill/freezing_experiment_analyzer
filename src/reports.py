@@ -6,6 +6,7 @@ import datetime as dt
 import cv2
 
 from src.localdata import load_log_data
+import matplotlib.pyplot as plt
 
 
 def generate_reports(experiment_name, pics_list, circles_positions, freezing_idxs, out_path, crop_values):
@@ -32,9 +33,24 @@ def generate_reports(experiment_name, pics_list, circles_positions, freezing_idx
                     i += 1
             fo.write(f'{record[1]},{record[5]},{i / freezing_events_time.__len__()}\n')
 
+    generate_plots(out_path)
     generate_video(pics_list, circles_positions, freezing_idxs, out_path, crop_values)
 
     click.echo("Reports done!")
+
+
+def generate_plots(out_path):
+    results = np.genfromtxt(out_path / 'frozen_fraction_report.csv',
+                            delimiter=',',
+                            dtype=[('index', 'int'), ('temp', '<f8'), ('ff', '<f8')])
+
+    plt.figure()
+    plt.plot(results['temp'], results['ff'])
+    plt.xlabel('Temperature [ºC]')
+    plt.ylabel('Frozen Fraction')
+    plt.grid()
+    plt.savefig(out_path / 'frozen_fraction.jpg')
+    plt.show()
 
 
 def generate_video(pic_list, circles_positions, freezing_idxs, out_path, crop_values=None):
