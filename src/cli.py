@@ -58,7 +58,7 @@ def analyze(experiment_name, crop, crop_values, n_cols, n_rows, blurriness, houg
 
     # Set default report path if None
     if out_path is None:
-        out_path = paths.reports_path / experiment_name
+        out_path = paths.processed_data_path / experiment_name
 
     pics_list = load_images_file_list(experiment_name)
 
