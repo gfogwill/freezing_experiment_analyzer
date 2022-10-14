@@ -31,26 +31,28 @@ def generate_reports(experiment_name, pics_list, circles_positions, freezing_idx
             for freezing_time in freezing_events_time:
                 if record[1].astype(dt.datetime).time() >= freezing_time:
                     i += 1
-            fo.write(f'{record[1]},{record[5]},{i / freezing_events_time.__len__()}\n')
+            if record[3]:  # if RAMP ON
+                fo.write(f'{record[1]}, {record[4]}, {record[5]},{i / freezing_events_time.__len__()}\n')
 
-    generate_plots(out_path)
+    generate_plots(out_path, experiment_name)
     generate_video(pics_list, circles_positions, freezing_idxs, out_path, crop_values)
 
     click.echo("Reports done!")
 
 
-def generate_plots(out_path):
+def generate_plots(out_path, experiment_name):
     results = np.genfromtxt(out_path / 'frozen_fraction_report.csv',
                             delimiter=',',
-                            dtype=[('index', 'int'), ('temp', '<f8'), ('ff', '<f8')])
+                            dtype=[('index', 'int'), ('setpoint', '<f8'), ('bath_temp', '<f8'), ('ff', '<f8')])
 
     plt.figure()
-    plt.plot(results['temp'], results['ff'])
+    plt.title(f"{experiment_name}")
+    plt.plot(results['bath_temp'], results['ff'])
     plt.xlabel('Temperature [ºC]')
     plt.ylabel('Frozen Fraction')
     plt.grid()
     plt.savefig(out_path / 'frozen_fraction.jpg')
-    plt.show()
+    # plt.show()
 
 
 def generate_video(pic_list, circles_positions, freezing_idxs, out_path, crop_values=None):
@@ -74,6 +76,8 @@ def generate_video(pic_list, circles_positions, freezing_idxs, out_path, crop_va
                 cv2.circle(img, (i[0], i[1]), i[2], (0, 0, 255), 2)
             else:
                 cv2.circle(img, (i[0], i[1]), i[2], (0, 255, 0), 2)
+
+        # cv2.putText(img, f'Bath temp: {}', (10, 50), cv2.FONT_HERSHEY_SIMPLEX, 1.5, (0, 255, 0), 2, cv2.LINE_AA)
 
     out = cv2.VideoWriter(str(out_path / 'video.avi'), cv2.VideoWriter_fourcc(*'DIVX'), 15, size)
 
