@@ -92,13 +92,15 @@ def check_circles_position(fi, n_cols, n_rows, blurriness, param1, param2, min_d
 
             plot_detected_circles(pic, circles_position)
 
-            if click.confirm("Are the circles in the correct position?"):
-                cv2.destroyAllWindows()
+            # if click.confirm("Are the circles in the correct position?"):
+            #     cv2.destroyAllWindows()
+            #
+            #     return circles_position
+            # else:
+            #     circles_position = []
+            #     continue
 
-                return circles_position
-            else:
-                circles_position = []
-                continue
+            return circles_position
 
     else:
         pic = cv2.medianBlur(gray, blurriness)
@@ -106,10 +108,11 @@ def check_circles_position(fi, n_cols, n_rows, blurriness, param1, param2, min_d
 
         plot_detected_circles(pic, circles_position)
 
-        if click.confirm("Are the circles in the correct position?", abort=True):
-            cv2.destroyAllWindows()
-
-            return circles_position
+        # if click.confirm("Are the circles in the correct position?", abort=True):
+        #     cv2.destroyAllWindows()
+        #
+        #     return circles_position
+        return circles_position
 
 
 def dialog_fix_bright_jump(grayscales_evolution, mean_grayscale_evolution):
