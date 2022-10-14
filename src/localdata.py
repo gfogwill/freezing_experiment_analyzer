@@ -10,7 +10,7 @@ from src import paths
 def load_images_file_list(experiment_name):
     # Load all the images
     experiment_path = pathlib.Path(paths.raw_data_path / experiment_name)
-    pics_path = experiment_path / 'pics'
+    pics_path = experiment_path
 
     if not experiment_path.exists():
         logging.error(f"Experiment {experiment_name} does not exist!\n Check dir: {experiment_path}")
@@ -31,6 +31,7 @@ def date_parser(s):
 
 def load_log_data(experiment_name):
     # return np.genfromtxt(paths.raw_data_path / experiment_name / 'ramp.txt', delimiter=' \t ', names=True)
+
     return np.genfromtxt(paths.raw_data_path / experiment_name / 'ramp.txt',
                          delimiter=' \t ',
                          encoding='iso-8859-1',
