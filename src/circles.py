@@ -1,3 +1,5 @@
+import logging
+
 import click
 import cv2
 import numpy as np
@@ -26,7 +28,7 @@ def plot_detected_circles(img, circles):
         for n, i in enumerate(circles):
             # outer circle
             # cv2.circle(image, center_coordinates, radius, color, thickness)
-            cv2.circle(img, (i[0], i[1]), i[2], (0, 0, 0), 1)
+            cv2.circle(img, (i[0], i[1]), i[2], (255, 0, 0), 1)
 
             # inner circle
             cv2.circle(img, (i[0], i[1]), 1, (0, 0, 255), 2)
@@ -68,7 +70,7 @@ def get_grayscales(image, circles, mask=True):
     return grayscales
 
 
-def get_circles(img, n_cols, min_dist=20, param1=60, param2=10, min_radius=15, max_radius=23, sort=True, plot=True):
+def get_circles(img, n_cols, min_dist=20, param1=60, param2=10, min_radius=15, max_radius=20, sort=True, plot=True):
 
     click.echo(f"Parameters used for circle Hough Transform:\n"
                f"\tParameter 1: {param1}\n"
@@ -95,9 +97,35 @@ def get_circles(img, n_cols, min_dist=20, param1=60, param2=10, min_radius=15, m
     return circles
 
 
-def get_grayscales_evolution(files_list, crop_values, circles_positions):
+def get_grayscales_evolution(
+        files_list: list, crop_values: tuple[int, int, int, int], circles_positions: list) -> (list, list):
+    """
+    Given a set of images and the positions of each aliquote
+    returns the grayscale evolution of each sample.
+
+    Parameters
+    ----------
+    files_list : array_like
+        list with pictures. The list must be sorted chronologically.
+    crop_values : (int, int, int, int)
+        tuple with the values to be used to crop the image.
+            (start_col, start_row, end_col:end_row)
+    circles_positions : array_like
+        array with a tuple for each of the circles.
+        [(200, 90, 11), ..., (400, 91, 11)]
+
+        Each tuple: (row, col, radius)
+
+    Returns
+    -------
+    list
+        grayscales_evolution
+    list
+        mean_grayscale_evolution
+    """
+
     grayscales_evolution = []
-    mean_grayscale_evolition = []
+    mean_grayscale_evolution = []
 
     click.echo('Analyzing images...')
 
@@ -109,12 +137,15 @@ def get_grayscales_evolution(files_list, crop_values, circles_positions):
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         img_blur = cv2.medianBlur(gray, 5)
 
-        grayscales_evolution.append(get_grayscales(img_blur, circles_positions))
+        try:
+            grayscales_evolution.append(get_grayscales(img_blur, circles_positions))
+        except AttributeError:
+            logging.error(f"Error in file {fi}")
 
-        mean_grayscale_evolition.append(img.mean())
+        mean_grayscale_evolution.append(img.mean())
 
     grayscales_evolution = np.array(grayscales_evolution)
 
     click.echo('Finished analyzing!')
 
-    return grayscales_evolution, mean_grayscale_evolition
+    return grayscales_evolution, mean_grayscale_evolution
