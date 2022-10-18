@@ -116,11 +116,12 @@ def drincz_analysis(experiment_name, crop, crop_values, n_cols, n_rows, blurrine
 if __name__ == '__main__':
     from src import paths
 
-    #experiment = "220925_LVS38_0828_0600_720min_T20_001"
-    #drincz_analysis(experiment, True, (325, 194, 826, 532), 12, 8, 7, 100, 10, 30)
+    # experiment = "221013_LVS46_0901_0640_660min_T95_001"
+    # drincz_analysis(experiment, True, (280, 194, 826, 532), 12, 8, 7, 100, 10, 30)
 
     for experiment in os.listdir(paths.raw_data_path):
         if not experiment.startswith('.'):
             click.echo(f"Processing experiment {experiment}")
-            drincz_analysis(experiment, True, (325, 194, 826, 532), 12, 8, 7, 100, 10, 30)
+            # drincz_analysis(experiment, True, None, 12, 8, 7, 100, 10, 30)
+            drincz_analysis(experiment, True, (280, 194, 826, 532), 12, 8, 7, 100, 10, 30)
 
