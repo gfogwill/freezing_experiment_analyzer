@@ -23,12 +23,13 @@ def reconstruct_bath_temp(data):
         corr = corrs[corrs['Setpoint_Temp_°C'] == line['RampSetTemp_°C'].round(1)]['T_mean_°C'][0]
         t_reconstructed.append(line['RampSetTemp_°C'] - corr)
 
-    data['Bath_Temp_°C'] = t_reconstructed
+    d = data.copy()
+    d['Bath_Temp_°C'] = t_reconstructed
 
-    return data
+    return d
 
 
-def generate_reports(experiment_name, pics_list, circles_positions, freezing_idxs, out_path, crop_values):
+def save_processed_data(experiment_name, pics_list, circles_positions, freezing_idxs, out_path, crop_values):
 
     logging.debug(f"Generating reports in path: {out_path}")
 
@@ -43,7 +44,7 @@ def generate_reports(experiment_name, pics_list, circles_positions, freezing_idx
         logging.warning(f"Reconstructing Bath Temperature for experiment: {experiment_name}")
         data = reconstruct_bath_temp(data)
 
-    # data['Bath_Temp_°C'] = data['Bath_Temp_°C'] * 0.917 + 1.3
+    data['Bath_Temp_°C'] = data['Bath_Temp_°C'] * 0.917 + 1.3
 
     t = []
     ff = []
@@ -54,13 +55,14 @@ def generate_reports(experiment_name, pics_list, circles_positions, freezing_idx
         freezing_events_time.append(dt.datetime.strptime(str(pics_list[idx].stem), '%H_%M_%S').time())
 
     with open(out_path / 'frozen_fraction_report.csv', 'w') as fo:
+        fo.write("Date,SetpointTemp,BathTemp,FF\n")
         for record in data:
             i = 0
             for freezing_time in freezing_events_time:
                 if record[1].astype(dt.datetime).time() >= freezing_time:
                     i += 1
             if record[3]:  # if RAMP ON
-                fo.write(f'{record[1]}, {record[4]}, {record[5]},{i/freezing_events_time.__len__()}\n')
+                fo.write(f'{record[1]},{record[4]},{record[5]},{i/freezing_events_time.__len__()}\n')
 
     generate_plots(out_path, experiment_name)
     generate_video(pics_list, circles_positions, freezing_idxs, out_path, crop_values)
