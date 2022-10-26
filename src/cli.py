@@ -10,7 +10,7 @@ from src.prompts import input_crop_values, check_circles_position, dialog_fix_br
 import click
 import numpy as np
 
-from src.reports import generate_reports
+from src.reports import save_processed_data
 
 LOGO = rf"""
 ❄ Freezing Experiment Analizer ❄   
@@ -84,7 +84,7 @@ def analyze(experiment_name, crop, crop_values, n_cols, n_rows, blurriness, houg
         grayscales_diffs = [t - s for s, t in zip(grayscales_evolution[:, i], grayscales_evolution[1:, i])]
         freezing_idxs.append(np.argmax(np.abs(grayscales_diffs)) + 1)
 
-    generate_reports(experiment_name, pics_list, circles_positions, freezing_idxs, out_path, crop_values)
+    save_processed_data(experiment_name, pics_list, circles_positions, freezing_idxs, out_path, crop_values)
 
 
 def drincz_analysis(experiment_name, crop, crop_values, n_cols, n_rows, blurriness, hough_param1, hough_param2, hough_min_distance):
@@ -110,7 +110,7 @@ def drincz_analysis(experiment_name, crop, crop_values, n_cols, n_rows, blurrine
         grayscales_diffs = [t - s for s, t in zip(grayscales_evolution[:, i], grayscales_evolution[1:, i])]
         freezing_idxs.append(np.argmax(np.abs(grayscales_diffs)) + 1)
 
-    generate_reports(experiment_name, pics_list, circles_positions, freezing_idxs, out_path, crop_values)
+    save_processed_data(experiment_name, pics_list, circles_positions, freezing_idxs, out_path, crop_values)
 
 
 if __name__ == '__main__':
@@ -120,7 +120,7 @@ if __name__ == '__main__':
     # drincz_analysis(experiment, True, (280, 194, 826, 532), 12, 8, 7, 100, 10, 30)
 
     for experiment in os.listdir(paths.raw_data_path):
-        if not experiment.startswith('.'):
+        if not experiment.startswith('.') and experiment.split('_')[1].startswith('BT'):
             click.echo(f"Processing experiment {experiment}")
             # drincz_analysis(experiment, True, None, 12, 8, 7, 100, 10, 30)
             drincz_analysis(experiment, True, (280, 194, 826, 532), 12, 8, 7, 100, 10, 30)
