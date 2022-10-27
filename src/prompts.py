@@ -63,7 +63,7 @@ def input_crop_values(fi):
         cv2.waitKey(1)
 
 
-def check_circles_position(fi, n_cols, n_rows, blurriness, param1, param2, min_distance, crop_values=None):
+def find_circles_position(fi, n_cols, n_rows, blurriness, param1, param2, min_distance, crop_values=None):
     circles_position = []
 
     img = cv2.imread(fi)
