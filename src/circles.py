@@ -97,7 +97,7 @@ def get_circles(img, n_cols, min_dist=20, param1=60, param2=10, min_radius=15, m
 
 
 def get_grayscales_evolution(
-        files_list: list, crop_values: tuple[int, int, int, int], circles_positions: list) -> (list, list):
+        files_list: list, crop_values: tuple[int, int, int, int], circles_positions: list) -> np.ndarray:
     """
     Given a set of images and the positions of each aliquote
     returns the grayscale evolution of each sample.
@@ -117,14 +117,11 @@ def get_grayscales_evolution(
 
     Returns
     -------
-    list
-        grayscales_evolution
-    list
-        mean_grayscale_evolution
+    grayscales_evolution : ndarray
+        array of dimension N by 96. Where N is the number of pictures in the experiment
     """
 
     grayscales_evolution = []
-    mean_grayscale_evolution = []
 
     logging.debug('Analyzing images...')
 
@@ -141,10 +138,8 @@ def get_grayscales_evolution(
         except AttributeError:
             logging.error(f"Error in file {fi}")
 
-        mean_grayscale_evolution.append(img.mean())
-
     grayscales_evolution = np.array(grayscales_evolution)
 
     logging.debug('Finished analyzing!')
 
-    return grayscales_evolution, mean_grayscale_evolution
+    return grayscales_evolution
