@@ -3,9 +3,9 @@ import os
 from src import __version__
 
 from src import paths
-from src.circles import get_grayscales_evolution
+from src.circles import get_grayscales_evolution, find_circles_position
 from src.localdata import load_images_file_list
-from src.prompts import input_crop_values, find_circles_position, dialog_fix_bright_jump
+from src.prompts import input_crop_values, dialog_fix_bright_jump
 
 import click
 import numpy as np
@@ -51,42 +51,13 @@ def info():
                                                                        'Gradient Method.')
 @click.option('--hough-min-distance', type=int, default=None, help='Minimum distance between the centers of'
                                                                                ' the detected circles.')
-@click.option('--fix-bright-jump', is_flag=True, default=False, help="Find the point where the bright changes and "
-                                                                     "fix the brightness of all images after that "
-                                                                     "point.")
 @click.option('--out-path', type=click.Path(), default=None, help="Output path to save reports.")
-def analyze(experiment_name, crop_values, n_cols, n_rows, blurriness, hough_param1, hough_param2, hough_min_distance, fix_bright_jump, out_path):
+def analyze(experiment_name, crop_values, n_cols, n_rows, blurriness, hough_param1, hough_param2, hough_min_distance, out_path):
     """Analyze all the images to detect the frozen fraction"""
 
     # Set default report path if None
     if out_path is None:
         out_path = paths.processed_data_path / experiment_name
-
-    pics_list = load_images_file_list(experiment_name)
-
-    # Set crop values
-    if crop_values is None:
-        crop_values = input_crop_values(str(pics_list[0]))  # Use the first image to ask for input
-
-    # Check if detected circles are correct
-    circles_positions = find_circles_position(str(pics_list[0]), n_cols, n_rows, blurriness, hough_param1, hough_param2, hough_min_distance, crop_values)
-
-    # Get the evolution of grayscale value for each circle
-    grayscales_evolution = get_grayscales_evolution(pics_list, crop_values, circles_positions)
-
-    # Find the indexes where freezing occurs
-    freezing_idxs = []
-
-    for i in range(grayscales_evolution.shape[-1]):
-        grayscales_diffs = [t - s for s, t in zip(grayscales_evolution[:, i], grayscales_evolution[1:, i])]
-        freezing_idxs.append(np.argmax(np.abs(grayscales_diffs)) + 1)
-
-    save_processed_data(experiment_name, pics_list, circles_positions, freezing_idxs, out_path, crop_values)
-
-
-def drincz_analysis(experiment_name, crop_values, n_cols, n_rows, blurriness, hough_param1, hough_param2, hough_min_distance):
-    # Set default report path if None
-    out_path = paths.processed_data_path / experiment_name
 
     pics_list = load_images_file_list(experiment_name)
 

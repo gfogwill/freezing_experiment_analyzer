@@ -6,6 +6,8 @@ import numpy as np
 import pathlib
 import os
 
+from src.prompts import PARAM1_MIN, PARAM1_MAX, PARAM2_MIN, PARAM2_MAX, BLURRINESS_MIN, BLURRINESS_MAX, DEFAULT_MIN_DIST
+
 
 def sort_circles(circles, n_cols):
     # https://stackoverflow.com/questions/61741434/opencv-sorting-array-of-circles
@@ -143,3 +145,45 @@ def get_grayscales_evolution(
     logging.debug('Finished analyzing!')
 
     return grayscales_evolution
+
+
+def find_circles_position(fi, n_cols, n_rows, blurriness, param1, param2, min_distance, crop_values=None):
+    circles_position = []
+
+    img = cv2.imread(fi)
+
+    n = n_rows * n_cols
+
+    if crop_values is not None:
+        img = img[crop_values[1]:crop_values[3], crop_values[0]:crop_values[2]]
+
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+
+    if param1 is None:
+        while circles_position.__len__() is not n:
+            param1 = np.random.randint(PARAM1_MIN, PARAM1_MAX)
+            param2 = np.random.randint(PARAM2_MIN, PARAM2_MAX)
+            blurriness = np.random.randint(BLURRINESS_MIN, BLURRINESS_MAX)
+            click.echo(f"Blurriness: {blurriness}")
+
+            try:
+                pic = cv2.medianBlur(gray, blurriness)
+            except cv2.error:
+                continue
+
+            circles_position = get_circles(pic, n_cols, min_dist=DEFAULT_MIN_DIST, param1=param1, param2=param2)
+
+            if circles_position.__len__() is not n:
+                continue
+
+            plot_detected_circles(pic, circles_position)
+
+            return circles_position
+
+    else:
+        pic = cv2.medianBlur(gray, blurriness)
+        circles_position = get_circles(pic, n_cols, min_dist=min_distance, param1=param1, param2=param2)
+
+        plot_detected_circles(pic, circles_position)
+
+        return circles_position
