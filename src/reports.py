@@ -70,17 +70,21 @@ def save_processed_data(experiment_name, pics_list, circles_positions, freezing_
     logging.debug("Reports done!")
 
 
-def generate_plots(out_path, experiment_name):
+def generate_plots(out_path, experiment):
     results = np.genfromtxt(out_path / 'frozen_fraction_report.csv',
                             delimiter=',',
                             dtype=[('index', 'int'), ('setpoint', '<f8'), ('bath_temp', '<f8'), ('ff', '<f8')])
 
     plt.figure()
-    plt.title(f"{experiment_name}")
     plt.plot(results['bath_temp'], results['ff'])
-    plt.xlabel('Temperature [ºC]')
-    plt.ylabel('Frozen Fraction')
+
+    plt.xlabel('Bath temp [°C]')
+    plt.ylabel('FF')
+
     plt.grid()
+    plt.title(f'{experiment}')
+    plt.xlim((-30, 0))
+
     plt.savefig(out_path / 'frozen_fraction.jpg')
     # plt.show()
 

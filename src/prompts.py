@@ -4,10 +4,6 @@ import numpy as np
 
 from matplotlib import pyplot as plt
 
-PARAM1_MIN, PARAM1_MAX = 70, 250
-PARAM2_MIN, PARAM2_MAX = 4, 15
-DEFAULT_MIN_DIST = 30
-BLURRINESS_MIN, BLURRINESS_MAX = 0, 9
 
 # Create point matrix get coordinates of mouse click on image
 point_matrix = [[-1, -1], [-1, -1]]
@@ -34,9 +30,9 @@ def input_crop_values(fi):
         if counter == 2:
             starting_x = point_matrix[0][0]
             starting_y = point_matrix[0][1]
-
             ending_x = point_matrix[1][0]
             ending_y = point_matrix[1][1]
+
             # Draw rectangle for area of interest
             cv2.rectangle(img, (starting_x, starting_y), (ending_x, ending_y), (0, 255, 0), 3)
 
