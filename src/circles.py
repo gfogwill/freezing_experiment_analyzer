@@ -75,25 +75,25 @@ def get_grayscales(image, circles, mask=True):
     return grayscales
 
 
-def get_circles(img, hough_transfor_params, sort=True, plot=True):
+def get_circles(img, hough_transform_params, sort=True, plot=True):
     logging.debug(f"Parameters used for circle Hough Transform:\n"
-                  f"\tParameter 1: {hough_transfor_params['param1']}\n"
-                  f"\tParameter 2: {hough_transfor_params['param2']}\n"
-                  f"\tMin. distance: {hough_transfor_params['min_dist']}")
+                  f"\tParameter 1: {hough_transform_params['param1']}\n"
+                  f"\tParameter 2: {hough_transform_params['param2']}\n"
+                  f"\tMin. distance: {hough_transform_params['min_dist']}")
 
     # https://docs.opencv.org/4.x/dd/d1a/group__imgproc__feature.html#ga47849c3be0d0406ad3ca45db65a25d2d
     circles = cv2.HoughCircles(img,
                                cv2.HOUGH_GRADIENT,
                                1,
-                               minDist=hough_transfor_params['min_dist'],
-                               param1=hough_transfor_params['param1'],
-                               param2=hough_transfor_params['param2'],
-                               minRadius=hough_transfor_params['min_radius'],
-                               maxRadius=hough_transfor_params['max_radius'],
+                               minDist=hough_transform_params['min_dist'],
+                               param1=hough_transform_params['param1'],
+                               param2=hough_transform_params['param2'],
+                               minRadius=hough_transform_params['min_radius'],
+                               maxRadius=hough_transform_params['max_radius'],
                                )[0]
 
     if sort:
-        circles = sort_circles(circles, hough_transfor_params['n_cols'])
+        circles = sort_circles(circles, hough_transform_params['n_cols'])
 
     if plot:
         plot_detected_circles(img, circles)
@@ -104,7 +104,7 @@ def get_circles(img, hough_transfor_params, sort=True, plot=True):
 def get_grayscales_evolution(
         files_list: list, crop_values: tuple[int, int, int, int], circles_positions: list) -> np.ndarray:
     """
-    Given a set of images and the positions of each aliquote
+    Given a set of images and the positions of each aliquot
     returns the grayscale evolution of each sample.
 
     Parameters
@@ -150,31 +150,31 @@ def get_grayscales_evolution(
     return grayscales_evolution
 
 
-def find_circles_position(fi, hough_transfor_params, crop_values=None):
+def find_circles_position(fi, hough_transform_params, crop_values=None):
     circles_position = []
 
     img = cv2.imread(fi)
 
-    n = hough_transfor_params['n_rows'] * hough_transfor_params['n_cols']
+    n = hough_transform_params['n_rows'] * hough_transform_params['n_cols']
 
     if crop_values is not None:
         img = img[crop_values[1]:crop_values[3], crop_values[0]:crop_values[2]]
 
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-    if hough_transfor_params['param1'] is None:
+    if hough_transform_params['param1'] is None:
         while circles_position.__len__() is not n:
             param1 = np.random.randint(PARAM1_MIN, PARAM1_MAX)
             param2 = np.random.randint(PARAM2_MIN, PARAM2_MAX)
             blurriness = np.random.randint(BLURRINESS_MIN, BLURRINESS_MAX)
-            click.echo(f"Blurriness: {hough_transfor_params['blurriness']}")
+            click.echo(f"Blurriness: {hough_transform_params['blurriness']}")
 
             try:
-                pic = cv2.medianBlur(gray, hough_transfor_params['blurriness'])
+                pic = cv2.medianBlur(gray, hough_transform_params['blurriness'])
             except cv2.error:
                 continue
 
-            circles_position = get_circles(pic, hough_transfor_params)
+            circles_position = get_circles(pic, hough_transform_params)
 
             if circles_position.__len__() is not n:
                 continue
@@ -184,8 +184,8 @@ def find_circles_position(fi, hough_transfor_params, crop_values=None):
             return circles_position
 
     else:
-        pic = cv2.medianBlur(gray, hough_transfor_params['blurriness'])
-        circles_position = get_circles(pic, hough_transfor_params)
+        pic = cv2.medianBlur(gray, hough_transform_params['blurriness'])
+        circles_position = get_circles(pic, hough_transform_params)
 
         plot_detected_circles(pic, circles_position)
 
