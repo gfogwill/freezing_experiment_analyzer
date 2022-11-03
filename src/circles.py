@@ -3,8 +3,8 @@ import logging
 import click
 import cv2
 import numpy as np
-import pathlib
-import os
+
+from src.reports import plot_detected_circles
 
 # Limits for the automatic search of the params
 PARAM1_MIN, PARAM1_MAX = 70, 250
@@ -13,35 +13,35 @@ BLURRINESS_MIN, BLURRINESS_MAX = 0, 9
 
 
 def sort_circles(circles, n_cols):
+    """
+    Given an array of tuples with the position and radius of the circles
+    returns an array of tuples with positions sorted from left to right and top to bottom.
+
+    Parameters
+    ----------
+    circles : array_like
+        array with a tuple for each of the circles.
+        [(200, 90, 11), ..., (400, 91, 11)]
+    n_cols : int
+        number of columns in the array of aliquotes
+
+    Returns
+    -------
+    sorted : array_like
+        array of tuples positions sorted from left to right and top to bottom
+    """
+
+
     # https://stackoverflow.com/questions/61741434/opencv-sorting-array-of-circles
     circles = np.round(circles).astype("int")
     circles = sorted(circles, key=lambda v: [v[1], v[0]])
 
-    sorted_rows = []
+    sorted_circles = []
     for k in range(0, len(circles), n_cols):
         row = circles[k:k + n_cols]
-        sorted_rows.extend(sorted(row, key=lambda v: v[0]))
+        sorted_circles.extend(sorted(row, key=lambda v: v[0]))
 
-    return sorted_rows
-
-
-def plot_detected_circles(img, circles):
-    # Draw detected circles
-    if circles is not None:
-        circles = np.uint16(np.around(circles))
-
-        for n, i in enumerate(circles):
-            # outer circle
-            # cv2.circle(image, center_coordinates, radius, color, thickness)
-            cv2.circle(img, (i[0], i[1]), i[2], (255, 0, 0), 1)
-
-            # inner circle
-            cv2.circle(img, (i[0], i[1]), 1, (0, 0, 255), 2)
-
-            cv2.putText(img, "{}".format(n + 1), (i[0], i[1]), cv2.FONT_HERSHEY_PLAIN, 1.0, (255, 255, 255), 1)
-
-    cv2.imshow('Image', img)
-    cv2.waitKey(100)
+    return sorted_circles
 
 
 def get_grayscales(image, circles, mask=True):
