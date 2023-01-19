@@ -4,7 +4,7 @@ import click
 import numpy as np
 import cv2
 
-from src.localdata import load_log_data
+from brr.localdata import load_log_data
 
 
 def generate_reports(experiment_name, pics_list, circles_positions, freezing_idxs, out_path, crop_values):

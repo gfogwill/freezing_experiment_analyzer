@@ -3,7 +3,7 @@ import pathlib
 
 import numpy as np
 
-from src import paths
+from brr import paths
 
 
 def load_images_file_list(experiment_name):

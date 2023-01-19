@@ -4,7 +4,7 @@ import numpy as np
 
 from matplotlib import pyplot as plt
 
-from src.circles import plot_detected_circles, get_circles
+from brr.circles import plot_detected_circles, get_circles
 
 PARAM1_MIN, PARAM1_MAX = 70, 250
 PARAM2_MIN, PARAM2_MAX = 4, 15

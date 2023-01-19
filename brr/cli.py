@@ -1,14 +1,14 @@
-from src import __version__
+from brr import __version__
 
-from src import paths
-from src.circles import get_grayscales_evolution
-from src.localdata import load_images_file_list
-from src.prompts import input_crop_values, check_circles_position, dialog_fix_bright_jump
+from brr import paths
+from brr.circles import get_grayscales_evolution
+from brr.localdata import load_images_file_list
+from brr.prompts import input_crop_values, check_circles_position, dialog_fix_bright_jump
 
 import click
 import numpy as np
 
-from src.reports import generate_reports
+from brr.reports import generate_reports
 
 LOGO = rf"""
 ❄ Freezing Experiment Analizer ❄   
